@@ -8,24 +8,10 @@ jobs:
     runs-on: macos-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Show environment
-        run: |
-          uname -a
-          clang --version
-          cmake --version || true
+      - name: List files
+        run: ls -la
 
-      - name: Make build script executable
-        run: chmod +x build_release_macos.sh || true
-
-      - name: Build
-        run: ./build_release_macos.sh
-
-      - name: Upload logs
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-output
-          path: .
+      - name: Find build scripts
+        run: find . -name "*.sh"

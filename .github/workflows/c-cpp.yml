@@ -4,14 +4,13 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+ build:
     runs-on: macos-latest
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: List files
-        run: ls -la
-
-      - name: Find build scripts
-        run: find . -name "*.sh"
+      - name: Build OrcaSlicer
+        run: |
+          chmod +x build_release_macos.sh
+          ./build_release_macos.sh

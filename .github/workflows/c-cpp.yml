@@ -8,23 +8,39 @@ jobs:
     runs-on: macos-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout source
+        uses: actions/checkout@v4
 
       - name: Install build dependencies
         run: |
           brew update
           brew install automake autoconf libtool pkg-config
-          brew install gmp mpfr
+          brew install gmp mpfr texinfo
+
+      - name: Ensure texinfo is on PATH
+        run: |
+          echo "$(brew --prefix texinfo)/bin" >> $GITHUB_PATH
 
       - name: Verify tools
         run: |
           autoreconf --version
           automake --version
-          libtool --version || true
+          makeinfo --version
           brew list gmp
           brew list mpfr
 
       - name: Build OrcaSlicer
         run: |
           chmod +x build_release_macos.sh
+          export MAKEINFO=true
           ./build_release_macos.sh
+
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-output
+          path: |
+            build
+            build_*
+            *.log

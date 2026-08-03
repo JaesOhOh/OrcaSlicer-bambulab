@@ -4,11 +4,25 @@ on:
   workflow_dispatch:
 
 jobs:
- build:
+  build:
     runs-on: macos-latest
 
     steps:
       - uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        run: |
+          brew update
+          brew install automake autoconf libtool pkg-config
+          brew install gmp mpfr
+
+      - name: Verify tools
+        run: |
+          autoreconf --version
+          automake --version
+          libtool --version || true
+          brew list gmp
+          brew list mpfr
 
       - name: Build OrcaSlicer
         run: |
